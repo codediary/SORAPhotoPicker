@@ -1,4 +1,5 @@
 # SORAPhotoPicker
 
-A PHPhotoPicker wrapper.
+A SwiftUI wrapper for PHPickerViewController.
+
 
