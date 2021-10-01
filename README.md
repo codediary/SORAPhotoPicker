@@ -2,7 +2,7 @@
 
 A PHPickerViewController wrapper for SwiftUI project.
 
-![photo picker screenshot 1](./images/photopicker-1.png)
+![photo picker screenshot 1](./Images/photopicker-1.png)
 
 ## Requirements
 - iOS 14.0 +
