@@ -9,55 +9,64 @@ A PHPickerViewController wrapper for SwiftUI project.
 
 
 ## How to use
+### 1) Photo picker
 ```swift
 //
-// 1. Open photo picker
+// 1. Open photo picker & collect selected result
 //
 #import SORAPhotoPicker 
 
-SORAPhotoPickerHelper.shared.picker() { results in
-  
-}
-```
+...
 
-
-```swift
-//
-// 2. Selection result: array of SORAPhotoPickerResult
-//
+@State private var showPicker = false
 @State private var selected: [SORAPhotoPickerResult] = []
 
-SORAPhotoPickerHelper.shared.picker() { results in
-  self.selected.append(contentsOf: results)
+func PhotoPickerDemo() -> some View {
+    VStack {
+        Button(action: {
+            showPicker.toggle()
+            self.selected.removeAll()
+        }) {
+            Text("Open picker")
+        }
+        .frame(height: 60)
+        .sheet(isPresented: $showPicker, content: {
+            SORAPhotoPickerHelper.shared.picker() { results in
+                self.selected.append(contentsOf: results)
+            }
+        })
+    }
 }
+
 ```
 
 ```swift
 //
-// 3. Load image
+// 2. Load image or video
 //
-@State private var image: UIImage? 
-...
-result.loadUIImage { image, error in
-    guard let image = image, error == nil else {return}
-    self.image = image
-    ...
-}
 
-//
-// 4. Load video
-//
+@State private var image: UIImage?
 @State private var videoURL: URL?
+
 ...
-result.loadVideo { videoURL, error in
-    guard let url = videoURL, error == nil else {return}
-    self.videoURL = url
+
+if result.isImage() {
+    result.loadUIImage { image, error in
+        guard let image = image, error == nil else {return}
+        self.image = image
+        ...
+    }
+} else {
+    result.loadVideo { videoURL, error in
+        guard let url = videoURL, error == nil else {return}
+        self.videoURL = url
+    }
 }
 ```
 
 ```swift
 //
-// 5. Display image 
+// 3. Display image 
 //
 var body: some View {
    Image(uiImage: self.image!)
@@ -67,10 +76,40 @@ var body: some View {
 }
 
 //
-// 6. Display video
+// 4. Display video
 //
 var body: some View {
    VideoPlayer(player: AVPlayer(url: videoURL!))
       .frame(width: 300)
 }
+```
+
+### 2) Camera
+```swift
+@State private var showCamera = false
+@State private var capturedImage: UIImage?
+@State private var capturedVideoURL: URL?
+...
+func CameraPickerDemo() -> some View {
+        VStack {
+            Button(action: {
+                self.capturedImage = nil
+                self.capturedVideoURL = nil
+                showCamera.toggle()
+            }) {
+                Text("Open camera")
+            }
+            .frame(height: 60)
+            .sheet(isPresented: $showCamera, content: {
+                SORACameraPicker(onDismiss:{
+                                },
+                                 onCapturePhoto:{ uiImage in
+                                    self.capturedImage = uiImage
+                                 },
+                                 onCaptureVideo:{ url in
+                                    self.capturedVideoURL = url
+                                 })
+            })
+        }
+    }
 ```

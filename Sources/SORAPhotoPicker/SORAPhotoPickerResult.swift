@@ -19,6 +19,12 @@ public class SORAPhotoPickerResult {
         self.phPickerResult = pickerResult
     }
     
+    public func isImage() -> Bool {
+        return  typeIdentifiers.contains("public.jpeg") ||
+                typeIdentifiers.contains("public.png") ||
+                typeIdentifiers.contains("com.compuserve.gif")
+    }
+    
     public func loadUIImage(completion: @escaping(UIImage?, Error?)->Void) {    
         if self.phPickerResult.itemProvider.canLoadObject(ofClass: UIImage.self) {
             self.loadImage() { image, error in
