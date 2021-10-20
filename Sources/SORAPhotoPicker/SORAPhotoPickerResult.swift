@@ -11,12 +11,14 @@ public class SORAPhotoPickerResult {
     public var typeIdentifiers: [String] {
         return self.phPickerResult.itemProvider.registeredTypeIdentifiers
     }
-    var suggestedName: String? {
-        return self.phPickerResult.itemProvider.suggestedName
-    }
+    
     
     init(pickerResult: PHPickerResult) {
         self.phPickerResult = pickerResult
+    }
+    
+    public var suggestedName: String? {
+        return self.phPickerResult.itemProvider.suggestedName
     }
     
     public func loadUIImage(completion: @escaping(UIImage?, Error?)->Void) {    
