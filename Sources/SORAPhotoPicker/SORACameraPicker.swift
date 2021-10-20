@@ -9,19 +9,28 @@ import SwiftUI
 import UIKit
 import MobileCoreServices
 
+public struct SORACameraPickerConfiguration {
+    let videoMaximumDuration: TimeInterval?
+    let videoQuality: UIImagePickerController.QualityType?
+    let allowsEditing: Bool = false
+}
+
 public struct SORACameraPicker: View {
     @Environment(\.presentationMode) var presentationMode
+    var conf: SORACameraPickerConfiguration?
     
     var onDismiss: (()->())?
     var onCapturePhoto: (UIImage)->()
     var onCaptureVideo: (URL) -> ()
-    public init(onDismiss:(()->())?, onCapturePhoto: @escaping(UIImage)->(), onCaptureVideo: @escaping(URL)->()){
+    public init(conf: SORACameraPickerConfiguration? = nil, onDismiss:(()->())?, onCapturePhoto: @escaping(UIImage)->(), onCaptureVideo: @escaping(URL)->()){
         self.onDismiss = onDismiss
         self.onCapturePhoto = onCapturePhoto
         self.onCaptureVideo = onCaptureVideo
+        self.conf = conf
     }
+    
     public var body: some View {
-        CameraPickerView(sourceType: .camera) { uiImage, url in
+        CameraPickerView(conf: self.conf) { uiImage, url in
             if uiImage == nil && url == nil {
                 onDismiss?()
             } else if let image = uiImage {
@@ -39,14 +48,21 @@ private struct CameraPickerView: UIViewControllerRepresentable {
     typealias UIViewControllerType = UIImagePickerController
     typealias SourceType = UIImagePickerController.SourceType
 
-    let sourceType: SourceType
+    let conf: SORACameraPickerConfiguration?
     let completionHandler: (UIImage?, URL?) -> Void
     
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let viewController = UIImagePickerController()
         viewController.delegate = context.coordinator
         viewController.mediaTypes = UIImagePickerController.availableMediaTypes(for: .camera) ?? [kUTTypeVideo as String]
-        viewController.sourceType = sourceType
+        viewController.sourceType = .camera
+        
+        //
+        // detail configuration
+        //
+        viewController.videoQuality = self.conf?.videoQuality ?? .typeMedium
+        viewController.allowsEditing = self.conf?.allowsEditing ?? false
+        viewController.videoMaximumDuration = self.conf?.videoMaximumDuration ?? TimeInterval(600)
         return viewController
     }
     
