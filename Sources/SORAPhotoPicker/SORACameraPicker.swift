@@ -10,23 +10,35 @@ import UIKit
 import MobileCoreServices
 
 public struct SORACameraPickerConfiguration {
-    let videoMaximumDuration: TimeInterval?
-    let videoQuality: UIImagePickerController.QualityType?
-    let allowsEditing: Bool = false
+    let videoMaximumDuration: TimeInterval
+    let videoQuality: UIImagePickerController.QualityType
+    let allowsEditing: Bool
+    
+    public init(videoMaximumDuration: TimeInterval? = TimeInterval(600),
+                videoQuality: UIImagePickerController.QualityType? = .typeHigh,
+                allowsEditing: Bool? = false) {
+        self.videoMaximumDuration = videoMaximumDuration!
+        self.videoQuality = videoQuality!
+        self.allowsEditing = allowsEditing!
+    }
 }
 
 public struct SORACameraPicker: View {
     @Environment(\.presentationMode) var presentationMode
-    var conf: SORACameraPickerConfiguration?
-    
+    var conf: SORACameraPickerConfiguration
     var onDismiss: (()->())?
     var onCapturePhoto: (UIImage)->()
     var onCaptureVideo: (URL) -> ()
+    
     public init(conf: SORACameraPickerConfiguration? = nil, onDismiss:(()->())?, onCapturePhoto: @escaping(UIImage)->(), onCaptureVideo: @escaping(URL)->()){
         self.onDismiss = onDismiss
         self.onCapturePhoto = onCapturePhoto
         self.onCaptureVideo = onCaptureVideo
-        self.conf = conf
+        if let userConf = conf {
+            self.conf = userConf
+        } else {
+            self.conf = SORACameraPickerConfiguration()
+        }
     }
     
     public var body: some View {
@@ -48,7 +60,7 @@ private struct CameraPickerView: UIViewControllerRepresentable {
     typealias UIViewControllerType = UIImagePickerController
     typealias SourceType = UIImagePickerController.SourceType
 
-    let conf: SORACameraPickerConfiguration?
+    let conf: SORACameraPickerConfiguration
     let completionHandler: (UIImage?, URL?) -> Void
     
     func makeUIViewController(context: Context) -> UIImagePickerController {
@@ -60,9 +72,9 @@ private struct CameraPickerView: UIViewControllerRepresentable {
         //
         // detail configuration
         //
-        viewController.videoQuality = self.conf?.videoQuality ?? .typeMedium
-        viewController.allowsEditing = self.conf?.allowsEditing ?? false
-        viewController.videoMaximumDuration = self.conf?.videoMaximumDuration ?? TimeInterval(600)
+        viewController.videoQuality = self.conf.videoQuality
+        viewController.allowsEditing = self.conf.allowsEditing
+        viewController.videoMaximumDuration = self.conf.videoMaximumDuration
         return viewController
     }
     
