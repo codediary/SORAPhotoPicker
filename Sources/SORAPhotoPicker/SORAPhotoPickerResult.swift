@@ -31,6 +31,42 @@ public class SORAPhotoPickerResult {
         }
     }
     
+    public func loadImageURL(completion: @escaping(URL?, Error?)->Void) {
+        if self.phPickerResult.itemProvider.hasItemConformingToTypeIdentifier("public.heic") {
+            self.loadPhotoWithIdentifier("public.heic") { url, error in
+                if let url = url {
+                    let copiedURL = SORAFileManager.copyToTempDirectory(fileURL: url)
+                    completion(copiedURL, error)
+                } else {
+                    completion(nil, error)
+                }
+            }
+        } else if self.phPickerResult.itemProvider.hasItemConformingToTypeIdentifier("public.jpeg") {
+            self.loadPhotoWithIdentifier("public.jpeg") { url, error in
+                if let url = url {
+                    let copiedURL = SORAFileManager.copyToTempDirectory(fileURL: url)
+                    completion(copiedURL, error)
+                } else {
+                    completion(nil, error)
+                }
+            }
+        } else if self.phPickerResult.itemProvider.hasItemConformingToTypeIdentifier("com.compuserve.gif") {
+            self.loadPhotoWithIdentifier("com.compuserve.gif") { url, error in
+                if let url = url {
+                    let copiedURL = SORAFileManager.copyToTempDirectory(fileURL: url)
+                    completion(copiedURL, error)
+                } else {
+                    completion(nil, error)
+                }
+            }
+        } else {
+            let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString("Failed to load image", comment: "")]
+            let error = NSError.init(domain: "com.sportsyou.sportsyouapp", code: 400, userInfo: userInfo)
+            completion(nil, error)
+        }
+    }
+    
+    
     public func loadVideo(completion: @escaping(URL?, Error?)->Void) {
         if self.phPickerResult.itemProvider.hasItemConformingToTypeIdentifier("com.apple.quicktime-movie") {
             self.loadPhotoWithIdentifier("com.apple.quicktime-movie") { url, error in
