@@ -11,9 +11,6 @@ public class SORAPhotoPickerResult {
     public var typeIdentifiers: [String] {
         return self.phPickerResult.itemProvider.registeredTypeIdentifiers
     }
-    var suggestedName: String? {
-        return self.phPickerResult.itemProvider.suggestedName
-    }
     
     init(pickerResult: PHPickerResult) {
         self.phPickerResult = pickerResult
@@ -25,6 +22,10 @@ public class SORAPhotoPickerResult {
                 typeIdentifiers.contains("com.compuserve.gif")
     }
     
+    public var suggestedName: String? {
+        return self.phPickerResult.itemProvider.suggestedName
+    }
+    
     public func loadUIImage(completion: @escaping(UIImage?, Error?)->Void) {    
         if self.phPickerResult.itemProvider.canLoadObject(ofClass: UIImage.self) {
             self.loadImage() { image, error in
@@ -34,6 +35,42 @@ public class SORAPhotoPickerResult {
             completion(nil, SORAPhotoPickerError.createError(reason: .failedToLoadImage))
         }
     }
+    
+    public func loadImageURL(completion: @escaping(URL?, Error?)->Void) {
+        if self.phPickerResult.itemProvider.hasItemConformingToTypeIdentifier("public.heic") {
+            self.loadPhotoWithIdentifier("public.heic") { url, error in
+                if let url = url {
+                    let copiedURL = SORAFileManager.copyToTempDirectory(fileURL: url)
+                    completion(copiedURL, error)
+                } else {
+                    completion(nil, error)
+                }
+            }
+        } else if self.phPickerResult.itemProvider.hasItemConformingToTypeIdentifier("public.jpeg") {
+            self.loadPhotoWithIdentifier("public.jpeg") { url, error in
+                if let url = url {
+                    let copiedURL = SORAFileManager.copyToTempDirectory(fileURL: url)
+                    completion(copiedURL, error)
+                } else {
+                    completion(nil, error)
+                }
+            }
+        } else if self.phPickerResult.itemProvider.hasItemConformingToTypeIdentifier("com.compuserve.gif") {
+            self.loadPhotoWithIdentifier("com.compuserve.gif") { url, error in
+                if let url = url {
+                    let copiedURL = SORAFileManager.copyToTempDirectory(fileURL: url)
+                    completion(copiedURL, error)
+                } else {
+                    completion(nil, error)
+                }
+            }
+        } else {
+            let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString("Failed to load image", comment: "")]
+            let error = NSError.init(domain: "com.sportsyou.sportsyouapp", code: 400, userInfo: userInfo)
+            completion(nil, error)
+        }
+    }
+    
     
     public func loadVideo(completion: @escaping(URL?, Error?)->Void) {
         if self.phPickerResult.itemProvider.hasItemConformingToTypeIdentifier("com.apple.quicktime-movie") {

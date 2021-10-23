@@ -21,7 +21,7 @@ public class SORAPhotoPickerHelper {
     }
     
     
-    func pickerActionSheetButtons(onSelectCamera:@escaping()->(), onSelectImageLibrary:@escaping()->()) -> [ActionSheet.Button] {
+    public func pickerActionSheetButtons(onSelectCamera:@escaping()->(), onSelectImageLibrary:@escaping()->()) -> [ActionSheet.Button] {
         var buttons: [ActionSheet.Button] = []
         buttons.append(
             ActionSheet.Button.default(Text(NSLocalizedString("Camera", comment: "")),

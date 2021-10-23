@@ -12,6 +12,12 @@ import PhotosUI
 public struct SORAPhotoPicker: View {
     var conf: PHPickerConfiguration
     let completion: (_ pickerResult:[SORAPhotoPickerResult]) -> Void
+    
+    public init(conf: PHPickerConfiguration, completion: @escaping(_ pickerResult:[SORAPhotoPickerResult]) -> Void) {
+        self.conf = conf
+        self.completion = completion
+    }
+    
     public var body: some View {
         return UIImagePicker(conf: conf, completion:{ pickerResults in
             let photos = pickerResults.map { result in
