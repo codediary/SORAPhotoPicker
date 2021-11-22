@@ -55,6 +55,15 @@ public class SORAPhotoPickerResult {
                     completion(nil, error)
                 }
             }
+        } else if self.phPickerResult.itemProvider.hasItemConformingToTypeIdentifier("public.png") {
+            self.loadPhotoWithIdentifier("public.png") { url, error in
+                if let url = url {
+                    let copiedURL = SORAFileManager.copyToTempDirectory(fileURL: url)
+                    completion(copiedURL, error)
+                } else {
+                    completion(nil, error)
+                }
+            }
         } else if self.phPickerResult.itemProvider.hasItemConformingToTypeIdentifier("com.compuserve.gif") {
             self.loadPhotoWithIdentifier("com.compuserve.gif") { url, error in
                 if let url = url {
