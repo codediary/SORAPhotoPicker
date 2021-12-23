@@ -13,10 +13,13 @@ public struct SORACameraPickerConfiguration {
     let videoMaximumDuration: TimeInterval
     let videoQuality: UIImagePickerController.QualityType
     let allowsEditing: Bool
+    let mediaTypes: [String]?
     
-    public init(videoMaximumDuration: TimeInterval? = TimeInterval(600),
+    public init(mediaTypes:[String]? = nil,
+                videoMaximumDuration: TimeInterval? = TimeInterval(600),
                 videoQuality: UIImagePickerController.QualityType? = .typeHigh,
                 allowsEditing: Bool? = false) {
+        self.mediaTypes = mediaTypes
         self.videoMaximumDuration = videoMaximumDuration!
         self.videoQuality = videoQuality!
         self.allowsEditing = allowsEditing!
@@ -66,7 +69,6 @@ private struct CameraPickerView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let viewController = UIImagePickerController()
         viewController.delegate = context.coordinator
-        viewController.mediaTypes = UIImagePickerController.availableMediaTypes(for: .camera) ?? [kUTTypeVideo as String]
         viewController.sourceType = .camera
         
         //
@@ -75,6 +77,11 @@ private struct CameraPickerView: UIViewControllerRepresentable {
         viewController.videoQuality = self.conf.videoQuality
         viewController.allowsEditing = self.conf.allowsEditing
         viewController.videoMaximumDuration = self.conf.videoMaximumDuration
+        if self.conf.mediaTypes == nil {
+            viewController.mediaTypes = UIImagePickerController.availableMediaTypes(for: .camera) ?? [kUTTypeVideo as String]
+        } else {
+            viewController.mediaTypes = self.conf.mediaTypes!
+        }
         return viewController
     }
     
