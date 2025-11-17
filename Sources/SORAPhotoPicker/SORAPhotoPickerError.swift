@@ -4,7 +4,7 @@
 //
 //  Created by codediary on 9/29/21.
 //
-
+#if os(iOS)
 import Foundation
 
 enum SORAPhotoPickerError: Int {
@@ -39,3 +39,5 @@ extension SORAPhotoPickerError {
                             userInfo: [NSLocalizedDescriptionKey : reason.description])
     }
 }
+#endif
+

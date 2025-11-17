@@ -1,7 +1,7 @@
 //
 //  SORAPhoto.swift
 //
-
+#if os(iOS)
 import Foundation
 import PhotosUI
 
@@ -157,3 +157,5 @@ public class SORAPhotoPickerResult {
         }
     }
 }
+#endif
+
