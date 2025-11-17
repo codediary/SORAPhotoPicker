@@ -4,7 +4,7 @@
 //
 //  Created by codediary on 9/6/21.
 //
-
+#if os(iOS)
 import Foundation
 
 class SORAFileManager {
@@ -25,5 +25,5 @@ class SORAFileManager {
         return targetURL
     }
 }
-
+#endif
 

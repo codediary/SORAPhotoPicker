@@ -8,7 +8,8 @@
 import Foundation
 import SwiftUI
 import PhotosUI
-
+#if os(iOS)
+@available(iOS 14.0, *)
 public struct SORAPhotoPicker: View {
     var conf: PHPickerConfiguration
     let completion: (_ pickerResult:[SORAPhotoPickerResult]) -> Void
@@ -27,7 +28,10 @@ public struct SORAPhotoPicker: View {
         })
     }
 }
+#endif
 
+#if os(iOS)
+@available(macOS 13, *)
 struct UIImagePicker: UIViewControllerRepresentable {
     @Environment(\.presentationMode) var presentationMode
     
@@ -62,3 +66,5 @@ struct UIImagePicker: UIViewControllerRepresentable {
         
     }
 }
+
+#endif

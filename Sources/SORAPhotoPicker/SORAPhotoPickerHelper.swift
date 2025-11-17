@@ -3,12 +3,12 @@
 //
 //  Created by codediary on 9/4/21.
 //
-
+#if os(iOS)
 import Foundation
 import PhotosUI
 import SwiftUI
 
-@available (iOS 14.0, *)
+@available(iOS 14.0, *)
 public class SORAPhotoPickerHelper {
     public static let shared = SORAPhotoPickerHelper()
     
@@ -38,3 +38,5 @@ public class SORAPhotoPickerHelper {
         return buttons
     }
 }
+#endif
+
